@@ -1,8 +1,7 @@
-const { resolve, basename } = require('path');
-const { app, Tray, Menu, dialog, MenuItem } = require('electron');
+const { resolve } = require('path');
+const { app, Tray, BrowserWindow } = require('electron');
 const Store = require('electron-store');
-const { spawn } = require('child_process');
-
+const positioner = require('electron-traywindow-positioner');
 
 const schema = {
   projects: {
@@ -10,81 +9,74 @@ const schema = {
   },
 }
 
+let tray;
+let window;
 
+const store = new Store({ schema })
 
+const storedProjects = store.get('projects');
+const projects = storedProjects ? JSON.parse(storedProjects) : [];
 
-let mainTray = {};
+function createWindow() {
+  // Remove the 'const' here to make it a gl obal variable
+  window = new BrowserWindow({
+    frame: false,
+    width: 400,
+    height: 500,
+    show: false,
+    resizable: false,
+  });
 
-function render(tray = mainTray) {
-  const store = new Store({ schema })
+  window.webContents.openDevTools()
+  window.store = store
+  window.loadFile('index.html');
+  window.on('show', () => {
+    Html();
+  });
+};
 
-  const storedProjects = store.get('projects');
-  const projects = storedProjects ? JSON.parse(storedProjects) : [];
+function Html() {
+  projects.forEach(async ({ name }, index) => {
 
-  console.log(store.get('projects'))
+    window.webContents.executeJavaScript(`
+      
+      const child${index} = document.createElement('p');
+      child${index}.innerHTML = '${name}';
+      document.getElementById('projects').appendChild(child${index});
+      `, true)
+      .then(function (result) {
+        console.log(result);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  });
 
-  const items = projects.map(({ name, path }) => ({
-    label: name,
-    submenu: [
-      {
-        label: 'open',
-
-        click: () => {
-          spawn('code', [path], { stdio: 'overlapped' })
-        }
-      },
-      {
-        label: 'remove',
-
-        click: () => {
-          store.set('projects', JSON.stringify(projects.filter(item => item.path !== path)));
-          render();
-        }
-      }
-    ],
-  }));
-
-  const contextMenu = Menu.buildFromTemplate([
-
-    {
-      type: 'separator',
-    },
-    ...items,
-    {
-      type: 'separator',
-    },
-    {
-      label: 'Add project', type: 'radio', click: () => {
-        dialog.showOpenDialog({ properties: ['openDirectory'] }).then(result => {
-          const [path] = result.filePaths;
-          store.set('projects', JSON.stringify([...projects, {
-            path,
-            name: basename(path),
-          }]))
-          render()
-        }).then(err => {
-          console.log(err);
-        })
-      }
-    },
-    {
-      type: 'normal',
-      role: 'quit',
-      enabled: true,
-    },
-
-  ])
-
-  // contextMenu.insert(0, new MenuItem({
-
-  // }));
-
-  tray.setToolTip('this is my app');
-  tray.setContextMenu(contextMenu);
 }
 
 
+
+function createTray() {
+  tray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
+
+  tray.on('click', () => {
+    toggleWindow();
+  });
+}
+
+function toggleWindow() {
+  if (window.isVisible()) {
+    window.hide();
+  } else {
+    const windowBounds = window.getBounds()
+    const trayBounds = tray.getBounds()
+
+    positioner.position(window, trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2));
+    window.show();
+  }
+}
+
 app.on('ready', () => {
-  mainTray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
-  render(mainTray);
-})
+  createWindow();
+  createTray();
+});
