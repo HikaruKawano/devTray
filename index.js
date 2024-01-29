@@ -1,3 +1,4 @@
+
 const { resolve, basename, join } = require('path');
 const { app, Tray, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const Store = require('electron-store');
@@ -46,6 +47,7 @@ function handleTrayClick(win) {
     } else {
       win.show();
 
+
     }
   });
 }
@@ -56,6 +58,7 @@ function reload() {
   const json = data ? JSON.parse(data) : [];
   return json
 }
+
 
 
 
@@ -132,3 +135,4 @@ app.on('ready', () => {
   mainTray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
   render();
 });
+
