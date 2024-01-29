@@ -1,7 +1,7 @@
 const { resolve, basename, join } = require('path');
 const { app, Tray, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const Store = require('electron-store');
-
+const ListContainerDoker = require('./src-electron/docker')
 
 const schema = {
   projects: {
@@ -45,7 +45,6 @@ function handleTrayClick(win) {
       win.hide();
     } else {
       win.show();
-
     }
   });
 }
@@ -107,14 +106,10 @@ function render() {
   })
 
 
-  ipcMain.on('project', (event, args) => {
-    projects = reload()
-    event.reply('project-post', projects);
-  });
-
   handleTrayClick(win);
 
   ipcMain.on('project', (event, args) => {
+    projects = reload()
     event.reply('project-post', projects);
   });
 
@@ -126,9 +121,18 @@ function render() {
     win.hide()
   })
 
+
+  //Docker events
+  ipcMain.on('List-docker-container', async (event, args) => {
+    let listContainer = await ListContainerDoker();
+    console.log(listContainer)
+    event.reply('list-container', listContainer);
+  })
+
 }
 
 app.on('ready', () => {
   mainTray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
+
   render();
 });

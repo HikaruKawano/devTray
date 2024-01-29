@@ -54,5 +54,27 @@ function addNewProject() {
   ipcRenderer.send('add-new-project');
 }
 
-ipcRenderer.send('project', { mensage: 'aaaa' })
+ipcRenderer.send('project')
 getProjects()
+
+
+//Docker
+ipcRenderer.send('List-docker-container');
+
+ipcRenderer.on('list-container', (event, args) => {
+  $('#docker-container').empty();
+
+  let docker = args;
+
+  $.map(docker, (container) => {
+    console.log(container)
+    $("#docker-container").append(`
+    <div class='docker-itens' >
+        <p class='docker-name'>${container.data.Image}</p>
+        <div class='action'>
+        
+        </div>
+    </div>
+    `)
+  })
+})
