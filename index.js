@@ -1,62 +1,138 @@
-const { resolve } = require('path');
-const { app, Tray, BrowserWindow } = require('electron');
+
+const { resolve, basename, join } = require('path');
+const { app, Tray, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const Store = require('electron-store');
 
 
+const schema = {
+  projects: {
+    type: 'string',
+  },
+};
 
-const path = require('path');
-const positioner = require('electron-traywindow-positioner');
+let mainTray = {};
 
-
-
-
-
-function createWindos() {
-  window = new BrowserWindow({
+function createMainWindow() {
+  const win = new BrowserWindow({
     width: 400,
     height: 600,
-    show: false,
-    autoHideMenuBar: true,
-    focusable: true,
-    resizable: false,
     frame: false,
-    fullscreenable: false,
+    show: false,
+    resizable: false,
+    roundedCorners: true,
     transparent: true,
-    movable: false,
     webPreferences: {
       nodeIntegration: true,
-      devTools: true,
+      contextIsolation: false,
     },
-  })
+  });
 
-  window.webContents.openDevTools();
-  // and load the index.html of the app.
-  window.loadFile('index.html');
-  window.on('blur', () => {
-    if (!window.webContents.isDevToolsOpened()) {
-      window.hide()
+
+
+  win.loadFile('./src/index.html');
+
+  win.on('blur', () => {
+    win.hide();
+  });
+
+
+
+  return win;
+}
+
+function handleTrayClick(win) {
+  mainTray.on('click', () => {
+    if (win.isVisible()) {
+      win.hide();
+    } else {
+      win.show();
+
+
+    }
+  });
+}
+
+const store = new Store({ schema });
+function reload() {
+  const data = store.get('projects');
+  const json = data ? JSON.parse(data) : [];
+  return json
+}
+
+
+
+
+function render() {
+
+  const win = createMainWindow();
+  let projects = [];
+
+
+
+  ipcMain.on('remove-project', (event, args) => {
+    projects = reload();
+    const pathToRemove = args;
+
+    // Find the index of the project with the specified path
+    const projectIndex = projects.findIndex(project => project.path === pathToRemove);
+
+    if (projectIndex !== -1) {
+      // If the project is found, remove it from the array
+      projects.splice(projectIndex, 1);
+
+      // Update the store with the modified projects array
+      store.set('projects', JSON.stringify(projects));
+
+      // Send updated projects to the renderer process
+      event.reply('project-post', projects);
     }
   })
 
-  let tray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
+  ipcMain.on('add-new-project', (event, args) => {
+    dialog.showOpenDialog({ properties: ['openDirectory'] })
+      .then(result => {
+        const [path] = result.filePaths;
+        projects = reload()
+        store.set('projects', JSON.stringify([...projects, {
+          path,
+          name: basename(path),
+        }]));
 
-  const showWindow = () => {
-    positioner.position(window, tray.getBounds() - 50);
-    window.show();
-  };
+        projects = reload()
+        console.log(projects)
 
-  const toggleWindow = () => {
-    if (window.isVisible()) return window.hide();
-    return showWindow();
-  };
+        event.reply('project-post', projects)
+      })
+      .catch(err => {
+        console.error(err);
+      });
+
+  })
 
 
-  tray.on('click', () => {
-    toggleWindow();
+  ipcMain.on('project', (event, args) => {
+    projects = reload()
+    event.reply('project-post', projects);
   });
-  tray.setToolTip('this is my app');
-  tray.setContextMenu();
+
+  handleTrayClick(win);
+
+  ipcMain.on('project', (event, args) => {
+    event.reply('project-post', projects);
+  });
+
+  ipcMain.on('quit-app', (event, arg) => {
+    app.quit()
+  })
+
+  ipcMain.on('mini-App', (event, arg) => {
+    win.hide()
+  })
+
 }
 
 app.on('ready', () => {
-  createWindos()
+  mainTray = new Tray(resolve(__dirname, 'assets', 'IconTemplate.png'));
+  render();
 });
+

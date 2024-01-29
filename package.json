@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "dev": "nodemon --exec electron .",
+    "dev": "nodemon  --exec electron . --ext .html,css,js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist:all": "npm-run-all -p dist:*",
@@ -22,10 +22,14 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
+    "dockerode": "^4.0.2",
+    "electron-prompt": "^1.7.0",
     "electron-store": "^8.1.0",
     "electron-traywindow-positioner": "^1.2.0",
     "electron-util": "^0.18.0",
-    "node-docker-api": "^1.1.22"
+
+    "jquery": "^3.7.1"
+
   },
   "linux": {
     "category": "Utility",
