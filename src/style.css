@@ -189,11 +189,26 @@ ion-icon.close {
   color: rgb(206, 205, 205);
 }
 
+.docker-state {
+  color: #919191;
+  font-family: 'Fira code';
+  font-size: smaller;
+}
+
+
 ion-icon {
   margin-left: 5px;
   margin-right: 5px;
   cursor: pointer;
   color: #FFFFFF;
+}
+
+.start-btn {
+  color: #7AD45B;
+}
+
+.stop-btn {
+  color: #dd4545;
 }
 
 .tab-btn {
@@ -205,6 +220,7 @@ ion-icon {
   font-size: medium;
   margin: 5px;
 }
+
 
 .tab-btn.active-tab {
 

@@ -125,7 +125,7 @@ function render() {
   //Docker events
   ipcMain.on('List-docker-container', async (event, args) => {
     let listContainer = await ListContainerDoker();
-    console.log(listContainer)
+    // console.log(listContainer)
     event.reply('list-container', listContainer);
   })
 

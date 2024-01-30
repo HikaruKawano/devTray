@@ -61,20 +61,43 @@ getProjects()
 //Docker
 ipcRenderer.send('List-docker-container');
 
-ipcRenderer.on('list-container', (event, args) => {
-  $('#docker-container').empty();
-
-  let docker = args;
-
+function createViewDocker(docker) {
   $.map(docker, (container) => {
     console.log(container)
     $("#docker-container").append(`
     <div class='docker-itens' >
         <p class='docker-name'>${container.data.Image}</p>
+        <p class='docker-state state-${container.data.Image}'>${container.data.State == 'running' ? 'running' : 'stopped'} </p>
         <div class='action'>
-        
+        ${container.data.State == 'running' ? `<ion-icon class='stop-btn btn' data-name='${container.data.Image}' data-value='${container.data.Id}' name="pause"></ion-icon>` : `<ion-icon class='start-btn btn' data-name='${container.data.Image}' data-value='${container.data.Id}' name="caret-forward"></ion-icon>`}
+          
+          
         </div>
-    </div>
+    </div>  
     `)
   })
+}
+
+ipcRenderer.on('list-container', (event, args) => {
+  console.log(args)
+  $('#docker-container').empty();
+
+  let docker = args;
+  createViewDocker(docker);
+
 })
+
+$('#docker').on('click', '.start-btn', (event) => {
+  let value = $(event.currentTarget).data('value');
+  let name = $(event.currentTarget).data('name');
+  $(`.state-${name}`).text('starting...')
+
+  ipcRenderer.send('start-container', value);
+});
+
+$('#docker').on('click', '.stop-btn', (event) => {
+  let value = $(event.currentTarget).data('value');
+  let name = $(event.currentTarget).data('name');
+  $(`.state-${name}`).text('stopping...')
+  ipcRenderer.send('stop-container', value);
+});
