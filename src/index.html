@@ -11,26 +11,63 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="action-btn">
+  <div class="action-btn">
 
-      <div>
-        <button type="button" id="Minimize" onclick={MiniApp()}><ion-icon class="minimize"
-            name="remove-circle"></ion-icon></button>
-        <button type="button" id="QuitApp" onclick={QuitApp()}><ion-icon class="close"
-            name="close-circle"></ion-icon></button>
-      </div>
+    <div>
+      <button type="button" id="Minimize" onclick={MiniApp()}><ion-icon class="minimize"
+          name="remove-circle"></ion-icon></button>
+      <button type="button" id="QuitApp" onclick={QuitApp()}><ion-icon class="close"
+          name="close-circle"></ion-icon></button>
     </div>
+  </div>
 
+
+  <div class="tab">
+    <button type="button" class="projects-tab tab-btn active-tab" onclick="TabProject()">Projects</button>
+    <button type="button" class="docker-tab tab-btn" onclick="TabDocker()">Docker</button>
+  </div>
+
+
+  <div class="container-project active">
     <div id="projects">
       <button type="button" id="add-project" onclick={addNewProject()}>New Project</button>
-
       <div id="projects-container"></div>
     </div>
+  </div>
 
+  <div class="container-docker desative">
+    <div id="docker">
+      <button type="button" id="add-docker" onclick={addNewContainer()}>New Container</button>
+      <form action="" class="disable">
+        <h1>Create Container</h1>
+        <input type="text" name="input-image" class="input-image" id="" onfocus={showList()} placeholder="Name Image">
+        <div class="container-list disable">
+          <ul class="list">
+
+          </ul>
+        </div>
+        <input type="text" name="input-name" class="input-name" id="" placeholder="Name Container">
+        <div class="create-action">
+          <button type="button" class="create" onclick="createDocker()">Create</button>
+        </div>
+      </form>
+
+
+      <div id="docker-container"></div>
+
+      <div class="progress disable">
+        <div class="action-progress">
+          <p class="progress-title"></p>
+          <ion-icon title="hide progress" class="progress-icon-hide" name="remove"></ion-icon>
+        </div>
+        <textarea name="" id="" re class="state-create" cols="40" rows="10"></textarea>
+      </div>
+    </div>
+  </div>
 
 </body>
 
 <script src="electro-connect.js"></script>
+<script src="features.js"></script>
 
 </html>
