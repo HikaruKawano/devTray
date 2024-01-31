@@ -1,3 +1,4 @@
+
 const { resolve, basename, join } = require('path');
 const { app, Tray, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const Store = require('electron-store');
@@ -45,6 +46,7 @@ function handleTrayClick(win) {
       win.hide();
     } else {
       win.show();
+
     }
   });
 }
@@ -55,6 +57,7 @@ function reload() {
   const json = data ? JSON.parse(data) : [];
   return json
 }
+
 
 
 
@@ -136,3 +139,4 @@ app.on('ready', () => {
 
   render();
 });
+
