@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Fira code';
 }
 
 
@@ -24,7 +25,8 @@ body {
 .container-docker {
   width: 100%;
   padding: 5px;
-
+  height: 85vh;
+  overflow: auto;
 }
 
 
@@ -43,10 +45,49 @@ body {
   font-family: 'Fira Code';
 }
 
+.container-list {
+  position: relative;
+  top: -10px;
+  background: #282d3a;
+  /* display: none; */
+}
+
+.list {
+  list-style: none;
+  padding: 10px;
+  color: #FFFFFF;
+}
+
+.action-progress {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-icon-hide {
+  margin-top: 5px;
+  margin-right: 20px;
+  color: #dd4545;
+  font-size: xx-large;
+}
+
+
+.list li {
+  padding: 10px 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  background-color: #343a4b;
+  border-radius: 5px;
+  font-weight: lighter;
+  cursor: pointer;
+}
+
+.input-name {
+  top: 215px
+}
+
 .docker-name {
   color: #FFFFFF;
   font-weight: 500;
-
   font-family: 'Fira Code';
 }
 
@@ -57,7 +98,7 @@ body {
 
 #doker {
   width: 100%;
-  height: 80vh;
+
 }
 
 ion-icon.close {
@@ -92,6 +133,11 @@ ion-icon.close {
 }
 
 #projects-container {
+  height: 100%;
+  overflow: auto;
+}
+
+#docker-container {
   height: 100%;
   overflow: auto;
 }
@@ -201,6 +247,73 @@ ion-icon {
   margin-right: 5px;
   cursor: pointer;
   color: #FFFFFF;
+}
+
+form {
+  display: flex;
+  margin: 10px;
+  flex-direction: column;
+}
+
+h1 {
+  color: #FFFFFF;
+  font-family: 'Fira code';
+  font-size: medium;
+  margin: 5px;
+
+}
+
+.progress-title {
+  color: #FFFFFF;
+  margin: 10px;
+}
+
+.state-create {
+  max-width: 800px;
+  max-height: 155px;
+
+  margin: 10px;
+  margin-top: 0px;
+  border: none;
+  background-color: #282d3a;
+  border-radius: 5px;
+  outline: none;
+  padding: 10px;
+  color: #FFFFFF;
+  resize: none;
+}
+
+
+
+.disable {
+  display: none;
+}
+
+.create-action {
+  width: 100%;
+  /* display: flex;
+  justify-content: end; */
+}
+
+.create {
+  padding: 10px;
+  background-color: #3791E7;
+  border: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: medium;
+  border-radius: 5px;
+}
+
+input {
+  padding: 10px;
+  background-color: #282d3a;
+  border: none;
+  outline: none;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: #FFFFFF;
+  font-family: 'Fira code';
 }
 
 .start-btn {

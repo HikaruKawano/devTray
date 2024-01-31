@@ -38,32 +38,36 @@
   <div class="container-docker desative">
     <div id="docker">
       <button type="button" id="add-docker" onclick={addNewContainer()}>New Container</button>
+      <form action="" class="disable">
+        <h1>Create Container</h1>
+        <input type="text" name="input-image" class="input-image" id="" onfocus={showList()} placeholder="Name Image">
+        <div class="container-list disable">
+          <ul class="list">
+
+          </ul>
+        </div>
+        <input type="text" name="input-name" class="input-name" id="" placeholder="Name Container">
+        <div class="create-action">
+          <button type="button" class="create" onclick="createDocker()">Create</button>
+        </div>
+      </form>
+
+
       <div id="docker-container"></div>
+
+      <div class="progress disable">
+        <div class="action-progress">
+          <p class="progress-title"></p>
+          <ion-icon title="hide progress" class="progress-icon-hide" name="remove"></ion-icon>
+        </div>
+        <textarea name="" id="" re class="state-create" cols="40" rows="10"></textarea>
+      </div>
     </div>
   </div>
 
 </body>
 
 <script src="electro-connect.js"></script>
-
-<script>
-  function TabProject() {
-    $('.container-project').addClass('actve');
-    $('.projects-tab').addClass('active-tab');
-    $('.container-project').removeClass('desative');
-    $('.container-docker').addClass('desative');
-    $('.container-docker').removeClass('active');
-    $('.docker-tab').removeClass('active-tab');
-  }
-
-  function TabDocker() {
-    $('.container-docker').addClass('actve');
-    $('.docker-tab').addClass('active-tab');
-    $('.container-docker').removeClass('desative');
-    $('.container-project').addClass('desative');
-    $('.container-project').removeClass('active');
-    $('.projects-tab').removeClass('active-tab');
-  }
-</script>
+<script src="features.js"></script>
 
 </html>
