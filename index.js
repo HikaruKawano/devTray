@@ -2,6 +2,7 @@ const { resolve, basename, join } = require('path');
 const { app, Tray, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const Store = require('electron-store');
 const ListContainerDoker = require('./src-electron/docker')
+const positioner = require('electron-traywindow-positioner');
 
 const schema = {
   projects: {
@@ -38,15 +39,20 @@ function createMainWindow() {
 
   return win;
 }
+const showWindow = (win, tray) => {
+  positioner.position(win, tray.getBounds());
+  win.show();
+};
 
 function handleTrayClick(win) {
   mainTray.on('click', () => {
     if (win.isVisible()) {
       win.hide();
     } else {
-      win.show();
+      showWindow(win, mainTray)
     }
   });
+
 }
 
 const store = new Store({ schema });
