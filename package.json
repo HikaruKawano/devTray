@@ -27,8 +27,10 @@
     "electron-store": "^8.1.0",
     "electron-traywindow-positioner": "^1.2.0",
     "electron-util": "^0.18.0",
+
     "jquery": "^3.7.1",
     "node-docker-api": "^1.1.22"
+
   },
   "linux": {
     "category": "Utility",
